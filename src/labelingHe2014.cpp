@@ -42,71 +42,6 @@ using namespace std;
 #define Ci 9
 #define null -1
 
-//Find the root of the tree of node i
-//template<typename LabelT>
-inline static
-uint findRoot(const uint *P, uint i){
-	uint root = i;
-	while (P[root] < root){
-		root = P[root];
-	}
-	return root;
-}
-
-//Make all nodes in the path of node i point to root
-//template<typename LabelT>
-inline static
-void setRoot(uint *P, uint i, uint root){
-	while (P[i] < i){
-		uint j = P[i];
-		P[i] = root;
-		i = j;
-	}
-	P[i] = root;
-}
-
-//Find the root of the tree of the node i and compress the path in the process
-//template<typename LabelT>
-inline static
-uint find(uint *P, uint i){
-	uint root = findRoot(P, i);
-	setRoot(P, i, root);
-	return root;
-}
-
-//unite the two trees containing nodes i and j and return the new root
-//template<typename LabelT>
-inline static
-uint set_union(uint *P, uint i, uint j){
-	uint root = findRoot(P, i);
-	if (i != j){
-		uint rootj = findRoot(P, j);
-		if (root > rootj){
-			root = rootj;
-		}
-		setRoot(P, j, root);
-	}
-	setRoot(P, i, root);
-	return root;
-}
-
-//Flatten the Union Find tree and relabel the components
-//template<typename LabelT>
-inline static
-uint flattenL(uint *P, uint length){
-	uint k = 1;
-	for (uint i = 1; i < length; ++i){
-		if (P[i] < i){
-			P[i] = P[P[i]];
-		}
-		else{
-			P[i] = k; k = k + 1;
-		}
-	}
-	return k;
-}
-
-
 inline static
 void firstScanCTB_OPT(const Mat1b &img, Mat1i& imgLabels, uint* P, uint &lunique) {
     int w(img.cols), h(img.rows); 
@@ -669,8 +604,10 @@ void firstScanCTB_OPT(const Mat1b &img, Mat1i& imgLabels, uint* P, uint &lunique
 int CTB_OPT(const cv::Mat1b &img, cv::Mat1i &imgLabels) {
 	
     imgLabels = cv::Mat1i(img.size(),0); // memset is used
-	//A quick and dirty upper bound for the maximimum number of labels.
-	const size_t Plength = img.rows*img.cols / 4;
+
+	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
+	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1;
+	
 	//Tree of labels
 	uint *P = (uint *)fastMalloc(sizeof(uint)* Plength);
 	//Background

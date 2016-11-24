@@ -38,7 +38,7 @@ int SAUF(const Mat1b &img, Mat1i &imgLabels){
 
 	imgLabels = Mat1i(img.size(), 0);
 
-	const size_t Plength = img.rows * img.cols / 4;		 // Raw superior limit for labels number
+	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1; //raw superior limit for labels number (only for 8-connectivity)
 	vector<uint> P(Plength); //array P for equivalences resolution
 	P[0] = 0;	//first label is for background pixels
 	uint lunique = 1;
@@ -138,7 +138,7 @@ int SAUF_OPT(const Mat1b &img, Mat1i &imgLabels){
     
 	imgLabels = Mat1i(img.size(),0);
 
-	const size_t Plength = img.rows * img.cols / 4;		 // Raw superior limit for labels number
+	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1; //raw superior limit for labels number (only for 8-connectivity)
 	uint *P = (uint *)fastMalloc(sizeof(uint)* Plength); //array P for equivalences resolution
 	P[0] = 0;	//first label is for background pixels
 	uint lunique = 1;
@@ -246,7 +246,7 @@ int SAUF_MEM(const Mat1b &img_origin, vector<unsigned long int> &accesses){
 	const int h = img_origin.rows;
 	const int w = img_origin.cols;
 
-	const size_t Plength = h * w / 4;	 // Raw superior limit for labels number
+	const size_t Plength = (h + 1)*(w + 1) / 4 + 1; //raw superior limit for labels number (only for 8-connectivity)
 
 	// Data structure for memory test
 	memMat<uchar> img(img_origin);
