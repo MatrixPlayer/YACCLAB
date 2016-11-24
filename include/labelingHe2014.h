@@ -28,6 +28,7 @@
 
 #pragma once
 #include "opencv2/opencv.hpp"
+#include "equivalenceSolverSuzuki.h"
 
 // Readable version of He's algorithm
 //int CTB(const cv::Mat1b &img, cv::Mat1i &imgLabels);
