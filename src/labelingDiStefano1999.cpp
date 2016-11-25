@@ -38,9 +38,13 @@ int DiStefano(const Mat1b &img, Mat1i &imgOut) {
 	// p q r		  p
 	// s x			q x
 	// lp,lq,lx: labels assigned to p,q,x
+
+	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
+	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1;
+
 	// FIRST SCAN:
-	int *aClass = new int[img.rows*img.cols / 4];
-	bool *aSingle = new bool[img.rows*img.cols / 4];
+	int *aClass = new int[Plength];
+	bool *aSingle = new bool[Plength];
 	for (int y = 0; y < img.rows; y++) {
 		for (int x = 0; x < img.cols; x++) {
 			if (img(y, x)) {
@@ -157,9 +161,13 @@ int DiStefanoOPT(const Mat1b &img, Mat1i &imgOut) {
 	// p q r		  p
 	// s x			q x
 	// lp,lq,lx: labels assigned to p,q,x
+
+	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
+	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1;
+
 	// FIRST SCAN:
-	int *aClass = new int[img.rows*img.cols / 4];
-	bool *aSingle = new bool[img.rows*img.cols / 4];
+	int *aClass = new int[Plength];
+	bool *aSingle = new bool[Plength];
 	for (int y = 0; y < img.rows; y++) {
 
 		// Get rows pointer
