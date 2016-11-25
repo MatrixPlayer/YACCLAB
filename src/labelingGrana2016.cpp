@@ -72,6 +72,10 @@ void firstScan(const Mat1b &img, Mat1i& imgLabels, uint* P, uint &lunique) {
 	for (int r = 1; r < h; ++r) {
 		// First column
 		int c = 0;
+
+		// It is also the last column? If yes skip to the specific tree (necessary to handle one column vector image)
+		if (c == w - 1) goto one_col;
+
 		if (condition_x) {
 			if (condition_q) {
 				imgLabels(r, c) = imgLabels(r - 1, c); // x = q
@@ -217,6 +221,19 @@ void firstScan(const Mat1b &img, Mat1i& imgLabels, uint* P, uint &lunique) {
 				}
 			}
 		}
+		continue;
+	one_col:
+		if (condition_x) {
+			if (condition_q) {
+				imgLabels(r, c) = imgLabels(r - 1, c); // x = q
+			}
+			else{
+				// x = new label
+				imgLabels(r, c) = lunique;
+				P[lunique] = lunique;
+				lunique++;
+			}
+		}
 	}//End rows's for
 
 #undef condition_x
@@ -300,6 +317,10 @@ void firstScan_OPT(const Mat1b &img, Mat1i& imgLabels, uint* P, uint &lunique) {
 
 		// First column
 		int c = 0;
+
+		// It is also the last column? If yes skip to the specific tree (necessary to handle one column vector image)
+		if (c == w - 1) goto one_col;
+
 		if (condition_x) {
 			if (condition_q) {
 				imgLabels_row[c] = imgLabels_row_prev[c]; // x = q
@@ -407,7 +428,7 @@ void firstScan_OPT(const Mat1b &img, Mat1i& imgLabels, uint* P, uint &lunique) {
 		}
 
 
-		// Last column
+	    // Last column 
 	break_A: 
 		if (condition_x) {
 			if (condition_q) {
@@ -443,6 +464,19 @@ void firstScan_OPT(const Mat1b &img, Mat1i& imgLabels, uint* P, uint &lunique) {
 					P[lunique] = lunique;
 					lunique++;
 				}
+			}
+		}
+		continue;
+	one_col:
+		if (condition_x) {
+			if (condition_q) {
+				imgLabels_row[c] = imgLabels_row_prev[c]; // x = q
+			}
+			else{
+				// x = new label
+				imgLabels_row[c] = lunique;
+				P[lunique] = lunique;
+				lunique++;
 			}
 		}
     }//End rows's for
@@ -522,6 +556,10 @@ void firstScan_MEM(memMat<uchar> &img, memMat<int> imgLabels, memVector<uint> &P
 	for (int r = 1; r < h; ++r) {
 		// First column
 		int c = 0;
+
+		// It is also the last column? If yes skip to the specific tree (necessary to handle one column vector image)
+		if (c == w - 1) goto one_col;
+
 		if (condition_x) {
 			if (condition_q) {
 				imgLabels(r, c) = imgLabels(r - 1, c); // x = q
@@ -665,6 +703,19 @@ void firstScan_MEM(memMat<uchar> &img, memMat<int> imgLabels, memVector<uint> &P
 					P[lunique] = lunique;
 					lunique++;
 				}
+			}
+		}
+		continue;
+	one_col:
+		if (condition_x) {
+			if (condition_q) {
+				imgLabels(r, c) = imgLabels(r - 1, c); // x = q
+			}
+			else{
+				// x = new label
+				imgLabels(r, c) = lunique;
+				P[lunique] = lunique;
+				lunique++;
 			}
 		}
 	}//End rows's for
