@@ -1,3 +1,31 @@
+# Copyright(c) 2016 - 2017 Costantino Grana, Federico Bolelli, Lorenzo Baraldi and Roberto Vezzani
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met :
+# 
+# *Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and / or other materials provided with the distribution.
+# 
+# * Neither the name of YACCLAB nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 cmake_minimum_required(VERSION 3.0.0)
 
 set (ProjectName "YACCLAB")
@@ -9,6 +37,9 @@ set(CMAKE_SUPPRESS_REGENERATION true)
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE PATH "Install prefix" FORCE)
+
+#Set YACCLAB_dataset download variable
+set(YACCLAB_DOWNLOAD_DATASET ON CACHE BOOL "If true the YACCLAB dataset will be downloaded automatically") 
 
 if(MSVC)
   set(CMAKE_USE_RELATIVE_PATHS ON CACHE INTERNAL "" FORCE)
@@ -99,24 +130,26 @@ file(COPY "${CMAKE_SOURCE_DIR}/doc/StandardConfigurationFileDoNotModifyItButTheO
 file(RENAME "${CMAKE_INSTALL_PREFIX}/StandardConfigurationFileDoNotModifyItButTheOneInTheInstallationFolder.cfg" "${CMAKE_INSTALL_PREFIX}/config.cfg")
 
 # Download and unpack dataset if necessary
-if (NOT EXISTS "${CMAKE_INSTALL_PREFIX}/input")
-	if (NOT EXISTS "${CMAKE_INSTALL_PREFIX}/dataset.zip")
-		message(STATUS "Downloading dataset...")
-		file(DOWNLOAD http://imagelab.ing.unimore.it/files/YACCLAB_dataset.zip "${CMAKE_INSTALL_PREFIX}/dataset.zip" STATUS status SHOW_PROGRESS)
-		list( GET status 0 error_code )
-		if( error_code )
-			message(ERROR " Cmake is not able to download the YACCLAB dataset. \nPlease, retry or download it manually and put the 'input' unzipped folder in the installation path:\n'" ${CMAKE_INSTALL_PREFIX} "'. \n(The dataset is available at http://imagelab.ing.unimore.it/files/YACCLAB_dataset.zip).")
-			if(EXISTS "${CMAKE_INSTALL_PREFIX}/dataset.zip")
-				file(REMOVE "${CMAKE_INSTALL_PREFIX}/dataset.zip")
+if(YACCLAB_DOWNLOAD_DATASET)
+	if (NOT EXISTS "${CMAKE_INSTALL_PREFIX}/input")
+		if (NOT EXISTS "${CMAKE_INSTALL_PREFIX}/dataset.zip")
+			message(STATUS "Downloading dataset...")
+			file(DOWNLOAD http://imagelab.ing.unimore.it/files/YACCLAB_dataset.zip "${CMAKE_INSTALL_PREFIX}/dataset.zip" STATUS status SHOW_PROGRESS)
+			list( GET status 0 error_code )
+			if( error_code )
+				message(ERROR " Cmake is not able to download the YACCLAB dataset. \nPlease, retry or download it manually and put the 'input' unzipped folder in the installation path:\n'" ${CMAKE_INSTALL_PREFIX} "'. \n(The dataset is available at http://imagelab.ing.unimore.it/files/YACCLAB_dataset.zip).")
+				if(EXISTS "${CMAKE_INSTALL_PREFIX}/dataset.zip")
+					file(REMOVE "${CMAKE_INSTALL_PREFIX}/dataset.zip")
+				endif()
+			else()
+				message(STATUS "Downloading done.")
 			endif()
-		else()
-			message(STATUS "Downloading done.")
 		endif()
-	endif()
-	
-	if(EXISTS "${CMAKE_INSTALL_PREFIX}/dataset.zip")
-		message(STATUS "Unpacking (it may take a while)...")
-		execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf "${CMAKE_INSTALL_PREFIX}/dataset.zip" WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}" OUTPUT_QUIET)
-		message(STATUS "Unpacking done.")
+		
+		if(EXISTS "${CMAKE_INSTALL_PREFIX}/dataset.zip")
+			message(STATUS "Unpacking (it may take a while)...")
+			execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf "${CMAKE_INSTALL_PREFIX}/dataset.zip" WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}" OUTPUT_QUIET)
+			message(STATUS "Unpacking done.")
+		endif()
 	endif()
 endif()
