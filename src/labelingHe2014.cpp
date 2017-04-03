@@ -606,8 +606,9 @@ int CTB_OPT(const cv::Mat1b &img, cv::Mat1i &imgLabels) {
     imgLabels = cv::Mat1i(img.size(),0); // memset is used
 
 	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
-	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1;
-	
+	//const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1; // Oversized in some cases
+	const size_t Plength = (size_t)((img.rows + 1) / 2) * (size_t)((img.cols + 1) / 2) + 1;
+
 	//Tree of labels
 	uint *P = (uint *)fastMalloc(sizeof(uint)* Plength);
 	//Background

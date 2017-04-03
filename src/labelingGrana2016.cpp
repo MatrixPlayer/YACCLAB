@@ -246,7 +246,8 @@ int PRED(const Mat1b &img, Mat1i &imgLabels) {
 
 	imgLabels = cv::Mat1i(img.size(), 0); // memset is used
 	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
-	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1;
+	//const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1; // Oversized in some cases
+	const size_t Plength = (size_t)((img.rows + 1) / 2) * (size_t)((img.cols + 1) / 2) + 1;
 	
 	//Tree of labels
 	vector<uint> P(Plength);
@@ -491,7 +492,8 @@ int PRED_OPT(const Mat1b &img, Mat1i &imgLabels) {
 	
     imgLabels = cv::Mat1i(img.size(),0); // memset is used
 	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
-	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1;
+	//const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1; // Oversized in some cases
+	const size_t Plength = (size_t)((img.rows + 1) / 2) * (size_t)((img.cols + 1) / 2) + 1;
 	
 	//Tree of labels
 	uint *P = (uint *)fastMalloc(sizeof(uint)* Plength);
@@ -732,7 +734,9 @@ int PRED_MEM(const Mat1b &img_origin, vector<unsigned long int> &accesses) {
 	memMat<int> imgLabels(img_origin.size(), 0); // memset is used
 
 	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
-	const size_t Plength = (img_origin.rows + 1)*(img_origin.cols + 1) / 4 + 1;
+	//const size_t Plength = (img_origin.rows + 1)*(img_origin.cols + 1) / 4 + 1; // Oversized in some cases
+	const size_t Plength = (size_t)((img_origin.rows + 1) / 2) * (size_t)((img_origin.cols + 1) / 2) + 1;
+
 	
 	//Tree of labels
 	memVector<uint> P(Plength);

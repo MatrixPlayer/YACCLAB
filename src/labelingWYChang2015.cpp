@@ -38,7 +38,8 @@ int CCIT_OPT(const Mat1b& img, Mat1i& imgOut) {
     int w = imgOut.cols, h = imgOut.rows;
 
 	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
-	const size_t Plength = (w + 1)*(h + 1) / 4 + 1;
+	//const size_t Plength = (w + 1)*(h + 1) / 4 + 1; // Oversized in some cases
+	const size_t Plength = (size_t)((w + 1) / 2) * (size_t)((h + 1) / 2) + 1;
 
     int m = 1;
 	int *aRTable = new int[Plength];

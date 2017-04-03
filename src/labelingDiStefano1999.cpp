@@ -40,7 +40,8 @@ int DiStefano(const Mat1b &img, Mat1i &imgOut) {
 	// lp,lq,lx: labels assigned to p,q,x
 
 	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
-	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1;
+	//const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1; // Oversized in some cases
+	const size_t Plength = (size_t)((img.rows + 1) / 2) * (size_t)((img.cols + 1) / 2) + 1;
 
 	// FIRST SCAN:
 	int *aClass = new int[Plength];
@@ -163,7 +164,9 @@ int DiStefanoOPT(const Mat1b &img, Mat1i &imgOut) {
 	// lp,lq,lx: labels assigned to p,q,x
 
 	//A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
-	const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1;
+	//const size_t Plength = (img.rows + 1)*(img.cols + 1) / 4 + 1; // Oversized in some cases
+	const size_t Plength = (size_t)((img.rows + 1) / 2) * (size_t)((img.cols + 1) / 2) + 1;
+
 
 	// FIRST SCAN:
 	int *aClass = new int[Plength];
@@ -292,13 +295,15 @@ int DiStefanoMEM(const Mat1b &img_origin, vector<unsigned long int> &accesses){
 	memMat<uchar> img(img_origin); 
 	memMat<int> imgOut(img_origin.size());
 
+	const size_t Plength = (size_t)((img_origin.rows + 1) / 2) * (size_t)((img_origin.cols + 1) / 2) + 1;
+
 	int iNewLabel(0);
 	// p q r		  p
 	// s x			q x
 	// lp,lq,lx: labels assigned to p,q,x
 	// FIRST SCAN:
-	memVector<int> aClass(img_origin.rows*img_origin.cols / 4);
-	memVector<char> aSingle(img_origin.rows*img_origin.cols / 4);
+	memVector<int> aClass(Plength);
+	memVector<char> aSingle(Plength);
 	for (int y = 0; y < img_origin.rows; y++) {
 		for (int x = 0; x < img_origin.cols; x++) {
 			if (img(y, x)) {
