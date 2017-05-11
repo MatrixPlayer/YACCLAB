@@ -63,7 +63,10 @@ int LSL_STD(const Mat1b& img, Mat1i& labels) {
 
     // Step 2
     Mat1i ERA(rows, cols, 0); // relative to absolute label mapping
-    vector<int> EQ(rows*cols / 4); // equivalence table (maximum number of labels is 1 every 4 pixels, on a regular grid)
+
+	const size_t Plength = (size_t)((rows + 1) / 2) * (size_t)((cols + 1) / 2) + 1; //A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
+	vector<int> EQ(Plength); // equivalence table
+
     iota(begin(EQ), end(EQ), 0);
     int nea = 0;
     for (int r = 0; r < rows; ++r) {
@@ -179,7 +182,10 @@ int LSL_STD_OPT(const Mat1b& img, Mat1i& labels) {
 
 	// Step 2
 	Mat1i ERA(rows, cols, 0); // relative to absolute label mapping (up to 1 label every 2 pixels)
-	vector<int> EQ(rows*cols / 4); // equivalence table (maximum number of labels is 1 every 4 pixels, on a regular grid)
+
+	const size_t Plength = (size_t)((rows + 1) / 2) * (size_t)((cols + 1) / 2) + 1; //A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
+	vector<int> EQ(Plength); // equivalence table
+	
 	iota(begin(EQ), end(EQ), 0);
 	int nea = 0;
 	for (int r = 0; r < rows; ++r) {
@@ -298,7 +304,10 @@ int LSL_STD_MEM(const Mat1b& img_origin, vector<unsigned long int> &accesses) {
 
 	// Step 2
 	memMat<int> ERA(img_origin.size(), 0); // relative to absolute label mapping
-	memVector<int> EQ(rows*cols / 4);      // equivalence table (maximum number of labels is 1 every 4 pixels, on a regular grid)
+
+	const size_t Plength = (size_t)((rows + 1) / 2) * (size_t)((cols + 1) / 2) + 1; //A quick and dirty upper bound for the maximimum number of labels (only for 8-connectivity).
+	memVector<int> EQ(Plength); // equivalence table
+	
 	EQ.memiota(0, EQ.size(), 0);
 	int nea = 0;
 	for (int r = 0; r < rows; ++r) {
@@ -368,6 +377,7 @@ int LSL_STD_MEM(const Mat1b& img_origin, vector<unsigned long int> &accesses) {
 		}
 	}
 
+	Mat1i prova = Mat1i(img_origin.size());
 	// Step 5
 	memMat<int> labels(img_origin.size());
 	for (int r = 0; r < rows; ++r) {
