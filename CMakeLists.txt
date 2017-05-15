@@ -39,7 +39,7 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE PATH "Install prefix" FORCE)
 
 #Set YACCLAB_dataset download variable
-set(YACCLAB_DOWNLOAD_DATASET ON CACHE BOOL "If true the YACCLAB dataset will be downloaded automatically") 
+set(YACCLAB_DOWNLOAD_DATASET OFF CACHE BOOL "If true the YACCLAB dataset will be downloaded automatically") 
 
 if(MSVC)
   set(CMAKE_USE_RELATIVE_PATHS ON CACHE INTERNAL "" FORCE)
