@@ -27,7 +27,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
-#include "opencv2/opencv.hpp"
+#include <opencv2/core.hpp>
+#include <map> 
 
 class PerformanceEvaluator {
 	struct elapsed {

@@ -27,7 +27,6 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <opencv2/core/core.hpp> 
-#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
 #include <fstream>
@@ -108,14 +107,14 @@ bool getBinaryImage(const string FileName, Mat1b& binaryMat){
 
 	// Image load
 	Mat image;
-    image = imread(FileName, CV_LOAD_IMAGE_GRAYSCALE);   // Read the file
+    image = imread(FileName, IMREAD_GRAYSCALE);   // Read the file
 
     // Check if image exist
 	if (image.empty())
 		return false;
 
 	// Adjust the threshold to actually make it binary
-	threshold(image, binaryMat, 100, 1, CV_THRESH_BINARY);
+	threshold(image, binaryMat, 100, 1, THRESH_BINARY);
 
 	return true;
 }
