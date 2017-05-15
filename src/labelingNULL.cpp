@@ -32,7 +32,49 @@
 using namespace cv;
 using namespace std;
 
+// Improved version of the labelingNULL algorithm: thanks to Prof. Danyang Zhang
 int labelingNULL(const Mat1b &img, Mat1i &imgLabels) {
+	imgLabels = cv::Mat1i(img.size(), 0);
+
+	for (int r = 0; r < imgLabels.rows; ++r) {
+		// Get rows pointer
+		const uchar* const img_row = img.ptr<uchar>(r);
+		uint* const imgLabels_row = imgLabels.ptr<uint>(r);
+
+		for (int c = 0; c < imgLabels.cols; ++c) {
+			if (img_row[c] > 0) {
+				imgLabels_row[c] = 1;
+			}
+		}
+	}
+
+	return 0;
+}
+
+int labelingNULL_MEM(const Mat1b &img_origin, vector<unsigned long int> &accesses) {
+
+	memMat<uchar> img(img_origin);
+	memMat<int> imgLabels(img_origin.size(), 0);
+
+	for (int r = 0; r < imgLabels.rows; ++r) {
+
+		for (int c = 0; c < imgLabels.cols; ++c) {
+			if (img(r, c) > 0) {
+				imgLabels(r, c) = 1;
+			}
+		}
+	}
+
+	// Store total accesses in the output vector 'accesses'
+	accesses = vector<unsigned long int>((int)MD_SIZE, 0);
+
+	accesses[MD_BINARY_MAT] = (unsigned long int)img.getTotalAcesses();
+	accesses[MD_LABELED_MAT] = (unsigned long int)imgLabels.getTotalAcesses();
+
+	return 0;
+}
+
+int labelingNULL_old(const Mat1b &img, Mat1i &imgLabels) {
 	imgLabels = cv::Mat1i(img.size());
 
 	int nLabel = imgLabels.rows*imgLabels.cols;
@@ -52,7 +94,7 @@ int labelingNULL(const Mat1b &img, Mat1i &imgLabels) {
 	return nLabel;
 }
 
-int labelingNULL_MEM(const Mat1b &img_origin, vector<unsigned long int> &accesses) {
+int labelingNULL_MEM_old(const Mat1b &img_origin, vector<unsigned long int> &accesses) {
 	
 	memMat<uchar> img(img_origin); 
 	memMat<int> imgLabels(img_origin.size());

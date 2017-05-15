@@ -36,3 +36,9 @@ int labelingNULL(const cv::Mat1b &img, cv::Mat1i &imgLabels);
 
 // Memory test version
 int labelingNULL_MEM(const cv::Mat1b &img, std::vector<unsigned long int> &accesses);
+
+//// Optimized version
+//int labelingNULL_old(const cv::Mat1b &img, cv::Mat1i &imgLabels);
+//
+//// Memory test version
+//int labelingNULL_MEM_old(const cv::Mat1b &img, std::vector<unsigned long int> &accesses);
